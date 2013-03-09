@@ -9,26 +9,33 @@ task :default => :spec
 
 task :stats => "spec:statsetup"
 
+def file_glob
+  '*{_spec.rb,.feature}'
+end
+
 desc "Run all specs in spec directory (excluding plugin specs)"
-RSpec::Core::RakeTask.new(:spec => spec_prereq)
+RSpec::Core::RakeTask.new(:spec => spec_prereq) do |t|
+  t.pattern = "./spec/**/#{file_glob}"
+end
 
 namespace :spec do
+
   def types
-    dirs = Dir['./spec/**/*_spec.rb'].map { |f| f.sub(/^\.\/(spec\/\w+)\/.*/, '\\1') }.uniq
+    dirs = Dir["./spec/**/#{file_glob}"].map { |f| f.sub(/^\.\/(spec\/\w+)\/.*/, '\\1') }.uniq
     Hash[dirs.map { |d| [d.split('/').last, d] }]
   end
 
   types.each do |type, dir|
     desc "Run the code examples in #{dir}"
     RSpec::Core::RakeTask.new(type => spec_prereq) do |t|
-      t.pattern = "./#{dir}/**/*_spec.rb"
+      t.pattern = "./#{dir}/**/#{file_glob}"
     end
   end
 
   desc "Run all specs with rcov"
   RSpec::Core::RakeTask.new(:rcov => spec_prereq) do |t|
     t.rcov = true
-    t.pattern = "./spec/**/*_spec.rb"
+    t.pattern = "./spec/**/#{file_glob}"
     t.rcov_opts = '--exclude /gems/,/Library/,/usr/,lib/tasks,.bundle,config,/lib/rspec/,/lib/rspec-,spec'
   end
 
