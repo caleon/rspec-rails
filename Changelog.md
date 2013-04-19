@@ -1,10 +1,19 @@
 ### dev
-[full changelog](http://github.com/rspec/rspec-rails/compare/v2.13.0...master)
+[full changelog](http://github.com/rspec/rspec-rails/compare/v2.13.1...master)
 
-Enhancements
+### 2.13.1
+[full changelog](http://github.com/rspec/rspec-rails/compare/v2.13.0...v2.13.1)
 
+Bug fixes
+
+* View specs are no longer generated if no template engine is specified (Kevin
+  Glowacz)
 * `ActionController::Base.allow_forgery_protection` is set to its original
   value after each example. (Mark Dimas)
+* `patch` is supported in routing specs. (Chris Your)
+* Routing assertions are supported in controller specs in Rails 4. (Andy
+  Lindeman)
+* Fix spacing in the install generator template (Taiki ONO)
 
 ### 2.13.0 / 2013-02-23
 [full changelog](http://github.com/rspec/rspec-rails/compare/v2.12.2...v2.13.0)

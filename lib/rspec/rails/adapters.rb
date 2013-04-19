@@ -24,7 +24,8 @@ module RSpec
           end
 
           assertion_modules.each do |mod|
-            mod.instance_methods.each do |method|
+            mod.public_instance_methods.each do |method|
+              next if method == :method_missing || method == "method_missing"
               class_eval <<-EOM, __FILE__, __LINE__ + 1
                 def #{method}(*args, &block)
                   assertion_instance.send(:#{method}, *args, &block)
@@ -33,6 +34,34 @@ module RSpec
             end
           end
         end
+      end
+    end
+
+    # MiniTest::Unit::LifecycleHooks
+    module MiniTestLifecycleAdapter
+      extend ActiveSupport::Concern
+
+      included do |group|
+        group.before { after_setup }
+        group.after  { before_teardown }
+
+        group.around do |example|
+          before_setup
+          example.run
+          after_teardown
+        end
+      end
+
+      def before_setup
+      end
+
+      def after_setup
+      end
+
+      def before_teardown
+      end
+
+      def after_teardown
       end
     end
 

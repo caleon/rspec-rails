@@ -32,11 +32,14 @@ namespace :spec do
     end
   end
 
-  desc "Run all specs with rcov"
-  RSpec::Core::RakeTask.new(:rcov => spec_prereq) do |t|
-    t.rcov = true
-    t.pattern = "./spec/**/#{file_glob}"
-    t.rcov_opts = '--exclude /gems/,/Library/,/usr/,lib/tasks,.bundle,config,/lib/rspec/,/lib/rspec-,spec'
+  # RCov task only enabled for Ruby 1.8
+  if RUBY_VERSION < '1.9'
+    desc "Run all specs with rcov"
+    RSpec::Core::RakeTask.new(:rcov => spec_prereq) do |t|
+      t.rcov = true
+      t.pattern = "./spec/**/#{file_glob}"
+      t.rcov_opts = '--exclude /gems/,/Library/,/usr/,lib/tasks,.bundle,config,/lib/rspec/,/lib/rspec-,spec'
+    end
   end
 
   task :statsetup do
@@ -49,4 +52,3 @@ namespace :spec do
     end
   end
 end
-

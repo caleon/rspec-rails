@@ -23,17 +23,13 @@ describe <%= controller_class_name %>Controller do
 
   # This should return the minimal set of attributes required to create a valid
   # <%= class_name %>. As you add validations to <%= class_name %>, be sure to
-  # update the return value of this method accordingly.
-  def valid_attributes
-    <%= formatted_hash(example_valid_attributes) %>
-  end
+  # adjust the attributes here as well.
+  let(:valid_attributes) { <%= formatted_hash(example_valid_attributes) %> }
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # <%= controller_class_name %>Controller. Be sure to keep this updated too.
-  def valid_session
-    {}
-  end
+  let(:valid_session) { {} }
 
 <% unless options[:singleton] -%>
   describe "GET index" do
@@ -113,7 +109,7 @@ describe <%= controller_class_name %>Controller do
         # specifies that the <%= class_name %> created on the previous line
         # receives the :update_attributes message with whatever params are
         # submitted in the request.
-        <%- if Rails.version >= '4' -%>
+        <%- if RSpec::Rails.rails_version_satisfied_by?('>= 4.0.0.beta1') -%>
         <%= class_name %>.any_instance.should_receive(:update).with(<%= formatted_hash(example_params_for_update) %>)
         <%- else -%>
         <%= class_name %>.any_instance.should_receive(:update_attributes).with(<%= formatted_hash(example_params_for_update) %>)
